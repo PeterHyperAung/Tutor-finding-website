@@ -53,10 +53,9 @@ const schema = z
           .min(11, "Phone number must be at least 11 characters"),
       })
     ),
-    dob: z
-      .date()
-      .min(new Date("1900-01-01"), "Date of birth must be after 1900")
-      .max(new Date(), "Date must at least be before today"),
+    dob: z.string(),
+    // .min(new Date("1900-01-01"), "Date of birth must be after 1900")
+    // .max(new Date(), "Date must at least be before today"),
     gender: z.enum(["m", "f", "o"]),
     password: z.string().min(6, "Password must be at least 6 characters"),
     passwordConfirm: z
@@ -82,27 +81,19 @@ function SignupForm() {
           phoneNumber: "",
         },
       ],
-      dob: new Date(),
+      dob: new Date().toDateString(),
       gender: GenderEnum.male,
       password: "",
       passwordConfirm: "",
     },
-    // resolver: zodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
-  // const {
-  //   errors,
-  //   touchedFields,
-  //   dirtyFields,
-  //   isDirty,
-  //   isValid,
-  //   isSubmitting,
-  //   isSubmitted,
-  //   isSubmitSuccessful,
-  //   submitCount,
-  // } = formState;
-
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields: phoneNumbersFields,
+    append,
+    remove,
+  } = useFieldArray({
     name: "phoneNumbers",
     control: form.control,
   });
@@ -165,7 +156,6 @@ function SignupForm() {
                       <>
                         <RadioGroup
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
                           name="gender"
                           className="flex gap-5 mt-1"
                         >
@@ -197,11 +187,11 @@ function SignupForm() {
                   <FormItem>
                     <FormLabel>Enter your date of birth</FormLabel>
                     <FormControl>
-                      {/* @ts-ignore */}
                       <Input
+                        {...field}
+                        value={field.value}
                         type="date"
                         placeholder="example@gmail.com"
-                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -248,48 +238,37 @@ function SignupForm() {
               />
             </div>
             <div>
-              <FormField
-                control={form.control}
-                name="passwordConfirm"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Numbers</FormLabel>
-                    <FormControl>
-                      <>
-                        {fields.map((field, index) => (
-                          <div
-                            className="flex items-center mb-3 gap-3"
-                            key={field.id}
-                          >
-                            <Input
-                              type="text"
-                              placeholder="Enter your phone number"
-                              className=""
-                            />
-                            {index > 0 && (
-                              <FiMinusCircle
-                                onClick={() => remove(index)}
-                                className="text-xl text-primary cursor-pointer"
-                              />
-                            )}
-                          </div>
-                        ))}
-                        {fields.length < 5 ? (
-                          <Button
-                            variant="outline"
-                            onClick={() => append({ phoneNumber: "" })}
-                            className="text-slate-500 flex gap-2"
-                          >
-                            <FiPlusCircle className="text-xl cursor-pointer" />{" "}
-                            <p>Add an another number</p>
-                          </Button>
-                        ) : null}
-                      </>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <FormLabel>Phone Numbers</FormLabel>
+              <div className="mt-1">
+                {phoneNumbersFields.map((field, index) => (
+                  <div className="flex items-center mb-3 gap-3" key={field.id}>
+                    <Input
+                      type="text"
+                      placeholder="Enter your phone number"
+                      className=""
+                      {...form.register(`phoneNumbers.${index}.phoneNumber`)}
+                      // {...field}
+                    />
+                    {index > 0 && (
+                      <FiMinusCircle
+                        onClick={() => remove(index)}
+                        className="text-xl text-primary cursor-pointer"
+                      />
+                    )}
+                  </div>
+                ))}
+                {phoneNumbersFields.length < 5 ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => append({ phoneNumber: "" })}
+                    className="text-slate-500 flex gap-2"
+                  >
+                    <FiPlusCircle className="text-xl cursor-pointer" />{" "}
+                    <p>Add an another number</p>
+                  </Button>
+                ) : null}
+              </div>
             </div>
           </CardContent>
           <CardFooter className="justify-between">
@@ -299,7 +278,7 @@ function SignupForm() {
                 Login
               </Link>
             </div>
-            <Button>Sign Up</Button>
+            <Button type="submit">Sign Up</Button>
           </CardFooter>
         </form>
       </Form>

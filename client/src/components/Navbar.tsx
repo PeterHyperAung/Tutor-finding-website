@@ -18,7 +18,9 @@ type Props = {};
 const Navbar = (props: Props) => {
   return (
     <div className="flex justify-between px-3 md:px-10 py-3 shadow-sm border-b">
-      <p className="p-1 text-lg">Tutor Hub</p>
+      <p className="p-1 text-lg">
+        <Link href="/">Tutor Hub</Link>
+      </p>
       <NavigationMenu>
         <NavigationMenuList className="gap-5">
           <NavigationMenuItem></NavigationMenuItem>
