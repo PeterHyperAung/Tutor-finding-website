@@ -14,6 +14,13 @@ import {
   Button,
   RadioGroup,
   RadioGroupItem,
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
 } from "./ui";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -66,9 +73,7 @@ const schema = z
   });
 
 function SignupForm() {
-  const { register, handleSubmit, formState, control, watch } = useForm<
-    z.infer<typeof schema>
-  >({
+  const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
       username: "",
       email: "",
@@ -85,24 +90,21 @@ function SignupForm() {
     // resolver: zodResolver(schema),
   });
 
-  const {
-    errors,
-    touchedFields,
-    dirtyFields,
-    isDirty,
-    isValid,
-    isSubmitting,
-    isSubmitted,
-    isSubmitSuccessful,
-    submitCount,
-  } = formState;
-
-  const watchGender = watch("gender");
-  console.log("Gender", watchGender);
+  // const {
+  //   errors,
+  //   touchedFields,
+  //   dirtyFields,
+  //   isDirty,
+  //   isValid,
+  //   isSubmitting,
+  //   isSubmitted,
+  //   isSubmitSuccessful,
+  //   submitCount,
+  // } = formState;
 
   const { fields, append, remove } = useFieldArray({
     name: "phoneNumbers",
-    control,
+    control: form.control,
   });
 
   const onSubmit = (data: z.infer<typeof schema>) => {
@@ -110,123 +112,197 @@ function SignupForm() {
   };
 
   return (
-    <Card className="max-w-[500px] mx-auto my-10">
+    <Card className="max-w-[500px] mx-auto my-5">
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
         <CardDescription>Please provide your information here</CardDescription>
       </CardHeader>
-      <form action="" onSubmit={handleSubmit(onSubmit)} noValidate>
-        <CardContent>
-          <div className="mb-5">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              type="text"
-              id="username"
-              placeholder="Username"
-              {...register("username")}
-            />
-          </div>
-          <div className="mb-5">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              type="email"
-              id="email"
-              placeholder="Email"
-              {...register("email")}
-            />
-          </div>
-          <div className="mb-5">
-            <Label htmlFor="gender">Gender</Label>
-            <RadioGroup
-              // defaultValue={GenderEnum.male}
-              className="flex gap-5 mt-1"
-              {...register("gender")}
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value={GenderEnum.male} id="r1" />
-                <Label htmlFor="r1">Male</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value={GenderEnum.female} id="r2" />
-                <Label htmlFor="r2">Female</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value={GenderEnum.other} id="r3" />
-                <Label htmlFor="r3">Other</Label>
-              </div>
-            </RadioGroup>
-          </div>
-          <div className="mb-5">
-            <Label htmlFor="dob">Date of birth</Label>
-            <Input
-              type="date"
-              id="dob"
-              placeholder="Date of birth"
-              {...register("dob", {
-                valueAsDate: true,
-              })}
-            />
-          </div>
-          <div className="mb-5">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              id="password"
-              placeholder="Password"
-              {...register("password")}
-            />
-          </div>
-          <div className="mb-5">
-            <Label htmlFor="passwordConfirm">Confirm your password</Label>
-            <Input
-              type="password"
-              id="passwordConfirm"
-              placeholder="Confirm your password"
-              {...register("passwordConfirm")}
-            />
-          </div>
-          <div className="form-control">
-            <Label htmlFor="phoneNumbers">Phone Numbers</Label>
-            <div>
-              {fields.map((field, index) => (
-                <div className="flex items-center mb-3 gap-3" key={field.id}>
-                  <Input
-                    type="text"
-                    placeholder="Enter your phone number"
-                    className=""
-                    {...register(`phoneNumbers.${index}.phoneNumber`)}
-                  />
-                  {index > 0 && (
-                    <FiMinusCircle
-                      onClick={() => remove(index)}
-                      className="text-xl text-primary cursor-pointer"
-                    />
-                  )}
-                </div>
-              ))}
-              {fields.length < 5 ? (
-                <Button
-                  variant="outline"
-                  onClick={() => append({ phoneNumber: "" })}
-                  className="text-slate-500 flex gap-2"
-                >
-                  <FiPlusCircle className="text-xl cursor-pointer" />{" "}
-                  <p>Add an another number</p>
-                </Button>
-              ) : null}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8"
+          noValidate
+        >
+          <CardContent>
+            <div className="mb-5">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Enter your name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Username" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-          </div>
-        </CardContent>
-        <CardFooter className="justify-between">
-          <div className="text-sm">
-            Have an account?{" "}
-            <Link href="/login" className="text-link">
-              Login
-            </Link>
-          </div>
-          <Button>Sign Up</Button>
-        </CardFooter>
-      </form>
+            <div className="mb-5">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Enter your email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="example@gmail.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="mb-5">
+              <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Select your gender</FormLabel>
+                    <FormControl>
+                      <>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          name="gender"
+                          className="flex gap-5 mt-1"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value={GenderEnum.male} id="r1" />
+                            <Label htmlFor="r1">Male</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value={GenderEnum.female} id="r2" />
+                            <Label htmlFor="r2">Female</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value={GenderEnum.other} id="r3" />
+                            <Label htmlFor="r3">Other</Label>
+                          </div>
+                        </RadioGroup>
+                      </>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="mb-5">
+              <FormField
+                control={form.control}
+                name="dob"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Enter your date of birth</FormLabel>
+                    <FormControl>
+                      {/* @ts-ignore */}
+                      <Input
+                        type="date"
+                        placeholder="example@gmail.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="mb-5">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Enter your password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="mb-5">
+              <FormField
+                control={form.control}
+                name="passwordConfirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm your password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Password Confirmation"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="passwordConfirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Numbers</FormLabel>
+                    <FormControl>
+                      <>
+                        {fields.map((field, index) => (
+                          <div
+                            className="flex items-center mb-3 gap-3"
+                            key={field.id}
+                          >
+                            <Input
+                              type="text"
+                              placeholder="Enter your phone number"
+                              className=""
+                            />
+                            {index > 0 && (
+                              <FiMinusCircle
+                                onClick={() => remove(index)}
+                                className="text-xl text-primary cursor-pointer"
+                              />
+                            )}
+                          </div>
+                        ))}
+                        {fields.length < 5 ? (
+                          <Button
+                            variant="outline"
+                            onClick={() => append({ phoneNumber: "" })}
+                            className="text-slate-500 flex gap-2"
+                          >
+                            <FiPlusCircle className="text-xl cursor-pointer" />{" "}
+                            <p>Add an another number</p>
+                          </Button>
+                        ) : null}
+                      </>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </CardContent>
+          <CardFooter className="justify-between">
+            <div className="text-sm">
+              Have an account?{" "}
+              <Link href="/login" className="text-link">
+                Login
+              </Link>
+            </div>
+            <Button>Sign Up</Button>
+          </CardFooter>
+        </form>
+      </Form>
     </Card>
   );
 }

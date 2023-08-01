@@ -21,6 +21,16 @@ import {
 } from "./card";
 import { Button, buttonVariants } from "./button";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
+import {
+  useFormField,
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
+} from "./form";
 
 export {
   navigationMenuTriggerStyle,
@@ -44,4 +54,12 @@ export {
   buttonVariants,
   RadioGroup,
   RadioGroupItem,
+  useFormField,
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
 };
