@@ -18,7 +18,6 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormDescription,
   FormMessage,
   FormField,
 } from "./ui";
@@ -32,16 +31,6 @@ enum GenderEnum {
   other = "o",
 }
 
-// type Inputs = {
-//   username: string;
-//   email: string;
-//   phoneNumbers: { phoneNumber: string }[];
-//   dob: Date;
-//   gender: GenderEnum;
-//   password: string;
-//   passwordConfirm: string;
-// };
-
 const schema = z
   .object({
     username: z.string().min(3, "Username must be at least 3 characters"),
@@ -54,8 +43,6 @@ const schema = z
       })
     ),
     dob: z.string(),
-    // .min(new Date("1900-01-01"), "Date of birth must be after 1900")
-    // .max(new Date(), "Date must at least be before today"),
     gender: z.enum(["m", "f", "o"]),
     password: z.string().min(6, "Password must be at least 6 characters"),
     passwordConfirm: z
