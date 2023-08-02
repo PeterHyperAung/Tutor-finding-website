@@ -7,6 +7,13 @@
     "hono": "^3.3.4"
   },
   "devDependencies": {
-    "tsx": "^3.12.2"
+    "tsx": "^3.12.2",
+    "@planetscale/database": "^1.10.0",
+    "@types/node": "^20.4.5",
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "^0.27.2",
+    "hono": "^3.3.4",
+    "drizzle-kit": "^0.19.12",
+    "typescript": "^5.1.6"
   }
 }
