@@ -1,0 +1,18 @@
+{
+  "scripts": {
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.1.0",
+    "@planetscale/database": "^1.10.0",
+    "@types/node": "^20.4.5",
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "^0.27.2",
+    "hono": "^3.3.4"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.19.12",
+    "tsx": "^3.12.2",
+    "typescript": "^5.1.6"
+  }
+}
